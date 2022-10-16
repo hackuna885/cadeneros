@@ -26,15 +26,16 @@ use Dompdf\Dompdf;
     //Generamos el QR dentro de la Ruta 'img/qr/'
 
     $con = new SQLite3("../data/data.db");
-    $cs = $con -> query("SELECT * FROM vEmpleados2021");
+    $cs = $con -> query("SELECT * FROM v_registroUsr WHERE id = 1");
     
     // $cs = $con -> query("SELECT * FROM vEmpleados2021 WHERE id BETWEEN '227' AND '227' AND (correoUno NOT LIKE '')");
     // $cs = $con -> query("SELECT * FROM vEmpleados2021 WHERE id BETWEEN '261' AND '280' AND (correoInt NOT LIKE '')");
     while ($resul = $cs -> fetchArray()) {
-        $idData = $resul['id'];
-        $nomCompleto = $resul['nomCompleto'];
+        $id = $resul['id'];
+        $nombreCom = $resul['nombreCom'];
+        $institucion = $resul['institucion'];
         $dirPdf = '../../pdf/';
-        $nomPdf = $nomCompleto.'.pdf';
+        $nomPdf = $id.'.pdf';
         $archivoPdf = $dirPdf.$nomPdf;
       
       
@@ -47,7 +48,7 @@ use Dompdf\Dompdf;
             include "plantilla.php";
             $html = ob_get_clean();
             $dompdf->loadHtml($html);
-            $dompdf->setPaper('letter', 'landscape');
+            $dompdf->setPaper('letter', 'vertical');
             $dompdf->render();
     
             //Pregunta donde guardar el PDF
