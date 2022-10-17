@@ -4,6 +4,8 @@ error_reporting(E_ALL ^ E_DEPRECATED);
 header("Content-Type: text/html; Charset=UTF-8");
 date_default_timezone_set('America/Mexico_City');
 
+$idUser = (isset($_GET['idUser'])) ? $_GET['idUser'] : '';
+
 //Libreria de dompdf
 require_once 'dompdf/autoload.inc.php';
 use Dompdf\Dompdf;
@@ -11,7 +13,7 @@ use Dompdf\Dompdf;
 //Generamos el Gafete dentro de la Ruta 'img/qr/'
 
     $con = new SQLite3("../data/data.db");
-    $cs = $con -> query("SELECT * FROM v_registroUsr WHERE id = 1");
+    $cs = $con -> query("SELECT * FROM v_registroUsr WHERE correoMd5 = '$idUser'");
 
 
     while ($resul = $cs -> fetchArray()) {
@@ -19,8 +21,9 @@ use Dompdf\Dompdf;
         $nombreCom = $resul['nombreCom'];
         $institucion = $resul['institucion'];
         $correoMd5 = $resul['correoMd5'];
+        $usrAsistencia = $resul['usrAsistencia'];
         $dirPdf = '../../pdf/';
-        $nomPdf = $id.'.pdf';
+        $nomPdf = $correoMd5.'.pdf';
         $archivoPdf = $dirPdf.$nomPdf;
       
       
@@ -37,11 +40,11 @@ use Dompdf\Dompdf;
             $dompdf->render();
     
             //Pregunta donde guardar el PDF
-            // $pdf = $dompdf->stream($nomPdf);
+            $pdf = $dompdf->stream($nomPdf);
     
             //Guarda PDF dentro de la ruta
-            $output = $dompdf->output();
-            file_put_contents($archivoPdf, $output);
+            // $output = $dompdf->output();
+            // file_put_contents($archivoPdf, $output);
 
 	
             // ##################################
